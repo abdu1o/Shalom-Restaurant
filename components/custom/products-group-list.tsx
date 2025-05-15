@@ -27,7 +27,7 @@ export const ProductsGroupList: React.FC<Props> = ({
 
     const intersectionRef = React.useRef<HTMLDivElement>(null);
     const intersection = useIntersection(intersectionRef as React.RefObject<HTMLElement>, {
-        threshold: 1
+        threshold: 0.4444
     });
     
     React.useEffect(() =>{
