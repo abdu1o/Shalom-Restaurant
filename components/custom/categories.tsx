@@ -18,7 +18,6 @@ const categories = [
   { id: 7, name: 'Holiday courses' },
 ];
 
-
 export const Categories: React.FC<Props> = ({ className }) => {
     const activeId = useCategoryStore((state) => state.activeId);
     return (
