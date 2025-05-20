@@ -3,8 +3,8 @@ import { Container, Title, Categories, SortPopup, TopBar, Filters, ProductsGroup
 export default function Home() {
   return <>
   
-    <Container className="mt-8">
-      <Title text="Best of the best" size='lg' className="font-extrabold"/>
+    <Container className="mt-5 mb-5" >
+      <Title text="From Shabbat to Shakshuka — welcome home" size='lg' className="font-extrabold"/>
     </Container>
 
     <TopBar/>

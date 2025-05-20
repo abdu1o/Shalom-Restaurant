@@ -21,11 +21,11 @@ const categories = [
 export const Categories: React.FC<Props> = ({ className }) => {
     const activeId = useCategoryStore((state) => state.activeId);
     return (
-        <div className={cn('inline-flex gap-1 bg-gray-50 p-1 rounded-2xl', className)}>
+        <div className={cn('inline-flex gap-1 bg-transparent p-1', className)}>
             {
                 categories.map(({name, id}, index) => (
-                    <a className={cn('flex items-center font-bold h-11 rounded-2xl px-5',
-                        activeId === id && 'bg-white shadow-md shadow-gray-200 text-primary'
+                    <a className={cn('flex items-center font-bold h-11 rounded p-1 px-5',
+                        activeId === id && 'bg-transparent text-primary'
                     )}
                     href={`/#${name}`}
                     key = {index}>
