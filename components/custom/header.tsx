@@ -4,6 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '../ui';
 import { ArrowRight, ShoppingCart, User } from 'lucide-react';
+import Link from 'next/link';
+import { SearchInput } from './search-input';
 
 interface Props {
     className?: string;
@@ -16,11 +18,17 @@ export const Header: React.FC<Props> = ({ className }) => {
                 <Container className='flex items-center justify-between py-8'>
 
                     {/*left part*/}
-                    <div className='flex items-center gap-4'>
-                        <Image src="/logo.png" alt="Logo" width={65} height={65}/>
-                        <div>
-                            <h1 className="text-3xl uppercase font-black">Shalom</h1>
+                    <Link href='/'>
+                        <div className='flex items-center gap-4'>
+                            <Image src="/logo.png" alt="Logo" width={65} height={65}/>
+                            <div>
+                                <h1 className="text-3xl uppercase font-black">Shalom</h1>
+                            </div>
                         </div>
+                    </Link>
+
+                    <div className='mx-10 flex-1'>
+                        <SearchInput></SearchInput>
                     </div>
 
                     {/*right part*/}
