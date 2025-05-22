@@ -1,15 +1,22 @@
+'use client'
+
 import React from 'react';
 import { Title } from './title';
 import { FilterCheckbox } from './filter-checkbox';
 import { Input } from '../ui';
 import { RangeSlider } from './range-slider';
 import { CheckboxFilterGroup } from './checkbox-filters-group';
+import { useIngredients } from '@/hooks/useIngredients';
 
 interface Props {
     className?: string;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
+
+    const {ingredients, onAddId, selectedIds} = useIngredients();
+    const items = ingredients.map((item) => ({ value: String(item.id), text: item.name}));
+
     return (
         <div className={className}>
             <Title text='Filters' size='sm' className='mb-5 font-bold'/>
@@ -35,67 +42,16 @@ export const Filters: React.FC<Props> = ({ className }) => {
             </div>
 
             {/*lower checkoboxes*/}
-            <CheckboxFilterGroup title='Ingridients' className='mt-5' limit={3}
-            defaultItems={[
-                {
-                    text: 'Fish',
-                    value: '5',
-                },
-                {
-                    text: 'Meat',
-                    value: '6',
-                },
-                {
-                    text: 'Poultry',
-                    value: '7',
-                },
-                {
-                    text: 'Fruits',
-                    value: '8',
-                },
-                {
-                    text: 'Vegetables',
-                    value: '9',
-                },
-                {
-                    text: 'Nuts',
-                    value: '10',
-                },
-                {
-                    text: 'Legumes',
-                    value: '11',
-                },
-            ]}
-            items={[
-                {
-                    text: 'Fish',
-                    value: '5',
-                },
-                {
-                    text: 'Meat',
-                    value: '6',
-                },
-                {
-                    text: 'Poultry',
-                    value: '7',
-                },
-                {
-                    text: 'Fruits',
-                    value: '8',
-                },
-                {
-                    text: 'Vegetables',
-                    value: '9',
-                },
-                {
-                    text: 'Nuts',
-                    value: '10',
-                },
-                {
-                    text: 'Legumes',
-                    value: '11',
-                },
-            ]}></CheckboxFilterGroup>
+            <CheckboxFilterGroup 
+                title='Specific' 
+                name='ingredients'
+                className='mt-5' 
+                limit={3}
+                defaultItems={items.slice(0, 3)}
+                items={items}
+                onClickCheckbox={onAddId}
+                selectedIds={selectedIds}>
+            </CheckboxFilterGroup>
         </div>
     );
 };
