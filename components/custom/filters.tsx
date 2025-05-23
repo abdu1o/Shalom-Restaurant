@@ -2,56 +2,95 @@
 
 import React from 'react';
 import { Title } from './title';
-import { FilterCheckbox } from './filter-checkbox';
+import qs from 'qs';
 import { Input } from '../ui';
 import { RangeSlider } from './range-slider';
 import { CheckboxFilterGroup } from './checkbox-filters-group';
 import { useIngredients } from '@/hooks/useIngredients';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
     className?: string;
 }
 
+interface PriceProps {
+    priceFrom?: number;
+    priceTo?: number;
+}
+
+interface FiletrProps extends PriceProps {
+    ingredients: string;
+}
+
 export const Filters: React.FC<Props> = ({ className }) => {
 
-    const {ingredients, onAddId, selectedIds} = useIngredients();
+    const searchParams = useSearchParams() as unknown as Map<keyof FiletrProps, string>;
+
+    const [price, setPrice] = React.useState<PriceProps>({
+        priceFrom: Number(searchParams.get('priceFrom')) || undefined,
+        priceTo: Number(searchParams.get('priceTo')) || undefined
+    });
+
+    const {ingredients, onAddId, selectedIngredients} = useIngredients(searchParams.get('ingredients') ? searchParams.get('ingredients')?.split(',') : []);
+
     const items = ingredients.map((item) => ({ value: String(item.id), text: item.name}));
+
+    const router = useRouter();
+
+    const filters = {
+        ...price,
+        ingredients: Array.from(selectedIngredients)
+    }
+
+    const updatePrice = (name: keyof PriceProps, value: number ) => {
+        setPrice({
+            ...price,
+            [name]: value,
+        });
+    };
+
+    React.useEffect(() => {
+        const query = qs.stringify(filters, {arrayFormat: 'comma'});
+
+        router.push(`?${query}`, {scroll: false});
+    }, [filters]);
 
     return (
         <div className={className}>
             <Title text='Filters' size='sm' className='mb-5 font-bold'/>
 
-            {/*upper checkoboxes*/}
-            <div className='flex flex-col gap-3'>
-                <FilterCheckbox text="Kosher" value='1'></FilterCheckbox>
-                <FilterCheckbox text="Vegeterian" value='2'></FilterCheckbox>
-                <FilterCheckbox text="Gluten-Free" value='3'></FilterCheckbox>
-                <FilterCheckbox text="Sugar-Free" value='4'></FilterCheckbox>
-            </div>
-
-            {/*price filter*/}
-            <div className='mt-5 border-y border-y-neutral-100 py-6 pb-7'>
-                <p className='font-bold mb-3'>Price:</p>
-                <div className='flex gap-3 mb-5'>
-                    <Input type='number' placeholder='0' min={0} max={1000} defaultValue={0}></Input>
-                    <Input type='number' placeholder='1000' min={0} max={1000} defaultValue={10}></Input>
-                </div>
-
-                <RangeSlider min={0} max={1000} step={1} value={[0, 1000]}></RangeSlider>
-
-            </div>
-
-            {/*lower checkoboxes*/}
+            {/*checkoboxes*/}
             <CheckboxFilterGroup 
-                title='Specific' 
+                title='' 
                 name='ingredients'
                 className='mt-5' 
                 limit={3}
                 defaultItems={items.slice(0, 3)}
                 items={items}
                 onClickCheckbox={onAddId}
-                selectedIds={selectedIds}>
+                selectedIds={selectedIngredients}>
             </CheckboxFilterGroup>
+
+            {/*price filter*/}
+            <div className='mt-5 border-y border-y-neutral-100 py-6 pb-7'>
+                <p className='font-bold mb-3'>Price:</p>
+                <div className='flex gap-3 mb-5'>
+
+                    <Input type='number' placeholder='0' min={0} max={1000} 
+                    value={String(price.priceFrom)} 
+                    onChange={(e) => updatePrice('priceFrom', Number(e.target.value))}></Input>
+
+                    <Input type='number' placeholder='1000' min={0} max={1000} 
+                    value={String(price.priceTo)} 
+                    onChange={(e) => updatePrice('priceTo', Number(e.target.value))}></Input>
+
+                </div>
+
+                <RangeSlider min={0} max={1000} step={1} 
+                value={[price.priceFrom || 0, price.priceTo || 1000]} 
+                onValueChange={([priceFrom, priceTo]) => setPrice({priceFrom, priceTo})}></RangeSlider>
+
+            </div>
         </div>
     );
 };

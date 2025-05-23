@@ -1,4 +1,4 @@
-import { Container, Title, Categories, SortPopup, TopBar, Filters, ProductsGroupList } from "@/components/custom"
+import { Container, Title, TopBar, Filters, ProductsGroupList } from "@/components/custom"
 
 export default function Home() {
   return <>

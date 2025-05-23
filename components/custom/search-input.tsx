@@ -3,7 +3,7 @@
 import {cn} from '@/lib/utils'
 import React from 'react';
 import { Search } from 'lucide-react';
-import {useClickAway, useDebounce} from 'react-use';
+import {useClickAway} from 'react-use';
 import Link from 'next/link';
 import { Api } from '@/services/api-client';
 import { Product } from '@prisma/client';
@@ -19,7 +19,6 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
     const ref = React.useRef(null);
 
     useClickAway(ref, () => {
-        console.log(focused);
         setFocused(false);
     });
 
