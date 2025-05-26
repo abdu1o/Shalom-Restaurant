@@ -2,8 +2,10 @@
 
 import { Dialog } from '@/components/ui';
 import { Category, Product } from '@prisma/client';
-import { DialogContent, Title } from '@radix-ui/react-dialog';
 import React from 'react';
+import { Title } from '../title';
+import { DialogContent } from '@/components/ui/dialog';
+import { useRouter } from 'next/navigation';
 
 interface Props {
     product: Product;
@@ -12,10 +14,12 @@ interface Props {
 
 export const ChooseProduct: React.FC<Props> = ({ product, className }) => {
 
+    const router = useRouter();
+
     return (
-        <Dialog>
-            <DialogContent className='p-0 w-[1060px] max-w-[1060px] min-[h]-[500px] bg-white overflow-hidden'>
-                <Title>{product.name}</Title>
+        <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
+            <DialogContent className='p-0 w-[1060px] max-w-[1060px] h-[500px] min-[h]-[500px] bg-white overflow-hidden'>
+                <Title text={product.name}></Title>
             </DialogContent>
         </Dialog>
 
