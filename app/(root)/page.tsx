@@ -1,9 +1,12 @@
+export const revalidate = 60;
+
 import { Container, Title, TopBar, Filters, ProductsGroupList } from "@/components/custom"
 import { prisma } from "@/prisma/prisma-client";
 
 export default async function Home() {
 
   const categories = await prisma.category.findMany({ 
+    
     include: { 
       products: {
         include: {
