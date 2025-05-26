@@ -10,21 +10,22 @@ interface Props {
     name: string;
     price: number;
     imageUrl: string;
+    description: string;
     className?: string;
 }
 
-export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, className }) => {
+export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, description,className }) => {
     return (
             <div className={className}>
-                <Link href='/products/1'>
+                <Link href={`/product/${id}`}>
                     <div className='flex justify-center p-6 rounded-lg h-[260px]'>
-                        <img className='h-full max-h-[240px] min-h-[40px] w-full max-w-[240px] min-w-[40px] aspect-square object-contain rounded-lg' src={imageUrl} alt={name}></img>
+                        <img className='h-full max-h-[240px] min-h-[40px] w-full max-w-[240px] min-w-[40px] aspect-square object-contain rounded-4xl' src={imageUrl} alt={name}></img>
                     </div>
 
                     <Title text={name} size='sm' className='mb-1 mt-3 font-bold'></Title>
 
                     <p className='text-sm text-gray-400'>
-                        qwe qwe qwe
+                        {description}
                     </p>
 
                     <div className="flex justify-start items-center gap-3 mt-5">
