@@ -12,3 +12,6 @@ export { ProductsGroupList } from './products-group-list';
 export { SearchInput } from './search-input';
 export { ProductImage } from './product-image';
 export { VariantSelector } from './variant-selector';
+export { ChooseProductForm } from './choose-product-form';
+export { ChooseDrinkForm } from './choose-drink-form';
+export { ChooseProduct } from './modals/choose-product';

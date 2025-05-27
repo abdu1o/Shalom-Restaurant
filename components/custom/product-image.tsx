@@ -12,10 +12,8 @@ export const ProductImage: React.FC<React.PropsWithChildren<Props>> = ({ classNa
             <img 
                 src={imageUrl}
                 alt="logo"
-                className={cn('relative left-2 top-2 z-10 w-[500px] h-[500px] rounded-4xl')}>
+                className={cn('relative left-2S top-2 z-10 w-[250px] h-[250px] rounded-4xl')}>
             </img>
-
-            
         </div>
     );
 };

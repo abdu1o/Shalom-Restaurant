@@ -24,10 +24,6 @@ export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, descri
 
                     <Title text={name} size='sm' className='mb-1 mt-3 font-bold'></Title>
 
-                    <p className='text-sm text-gray-400'>
-                        {description}
-                    </p>
-
                     <div className="flex justify-start items-center gap-3 mt-5">
                         <span className="text-[20px]">
                             $<b>{price}</b>
