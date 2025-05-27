@@ -20,7 +20,7 @@ export const ChooseDrinkForm: React.FC<Props> = ({ imageUrl, name, description, 
     return (
         <div className={cn(className, 'flex flex-1')}>
             <div className="flex items-center jistify-center flex-1 relative w-full">
-                <img src={imageUrl} alt={name} className="relative left-5 top-1 z-10 transition-all w-[300px] h-[300px] duration-300 rounded-4xl"></img>
+                <img src={imageUrl} alt={name} className="relative left-10 top-1 z-10 transition-all w-[300px] h-[300px] duration-300 rounded-4xl"></img>
             </div>
 
             <div className="w-[300px] bg-white p-7">
