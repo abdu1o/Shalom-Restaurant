@@ -1,25 +1,30 @@
 'use client'
 
 import { Dialog } from '@/components/ui';
-import { Category, Product } from '@prisma/client';
+import { RelationsProduct } from '@/@types/prisma';
 import React from 'react';
-import { Title } from '../title';
 import { DialogContent } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
+import { ChooseProductForm, ChooseDrinkForm } from '../index';
 
 interface Props {
-    product: Product;
+    product: RelationsProduct;
     className?: string;
 }
 
 export const ChooseProduct: React.FC<Props> = ({ product, className }) => {
 
     const router = useRouter();
+    const isDrink = Boolean(product.items[0].size != null );
 
     return (
         <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
-            <DialogContent className='p-0 w-[1060px] max-w-[1060px] h-[500px] min-[h]-[500px] bg-white overflow-hidden'>
-                <Title text={product.name}></Title>
+            <DialogContent className="p-0 w-full max-w-[95vw] sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] min-h-[300px] sm:min-h-[350px] md:min-h-[400px] bg-white overflow-hidden">
+                {isDrink ? (
+                    <ChooseDrinkForm imageUrl={product.imageUrl} name={product.name} description={product.description ?? ''} items={product.items}></ChooseDrinkForm>
+                ) : (
+                    <ChooseProductForm imageUrl={product.imageUrl} name={product.name} description={product.description ?? ''} items={product.items}></ChooseProductForm>
+                )}
             </DialogContent>
         </Dialog>
 

@@ -14,6 +14,7 @@ export default function HomeLayout({
   modal: React.ReactNode;
 }>) {
   return (
+    
     <main className="min-h-screen">
       <Header/>
       {children}

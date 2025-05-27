@@ -45,7 +45,7 @@ export const ProductsGroupList: React.FC<Props> = ({
                 text-center
                 bg-gradient-to-r from-transparent via-blue-200 to-transparent'></Title>
 
-                <div className={cn('grid grid-cols-3 gap[80px]', listClassName)}>
+                <div className={cn('grid grid-cols-3 gap-15', listClassName)}>
 
                     {items.map((product, i) => (
                         <ProductCard
