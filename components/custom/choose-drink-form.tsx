@@ -9,12 +9,13 @@ interface Props {
     name: string;
     description?: string | null;
     className?: string;
+    classNameImg?: string;
     items: ProductItem[];
     loading?: boolean;
     onSubmit?: (itemId: number, size: number | null) => void;
 }
 
-export const ChooseDrinkForm: React.FC<Props> = ({ imageUrl, name, description, className, items, loading,onSubmit }) => {
+export const ChooseDrinkForm: React.FC<Props> = ({ imageUrl, name, description, className, classNameImg, items, loading, onSubmit }) => {
 
     const [size, setSize] = React.useState<string>(items.length > 0 ? "1" : "");
     const selectedItem = items[Number(size) - 1];
@@ -26,12 +27,12 @@ export const ChooseDrinkForm: React.FC<Props> = ({ imageUrl, name, description, 
   };
 
     return (
-        <div className={cn(className, 'flex flex-1')}>
+        <div className={cn('flex flex-1')}>
             <div className="flex items-center jistify-center flex-1 relative w-full">
-                <img src={imageUrl} alt={name} className="relative left-10 top-1 z-10 transition-all w-[300px] h-[300px] duration-300 rounded-4xl"></img>
+                <img src={imageUrl} alt={name} className={cn(classNameImg, "relativetop-1 z-10 transition-all duration-300 rounded-4xl")}></img>
             </div>
 
-            <div className="w-[300px] bg-white p-7">
+            <div className={cn(className, "bg-white p-7 shrink-0")}>
                 <Title text={name} size='md' className='font-extrabold mb-1'></Title>
 
                 <p className="mt-4 text-gray-500">{description}</p>

@@ -9,10 +9,12 @@ import { Button } from '../ui';
 import { User } from 'lucide-react';
 
 interface Props {
+    hasSearch?: boolean;
+    hasCart?: boolean;
     className?: string;
 }
 
-export const Header: React.FC<Props> = ({ className }) => {
+export const Header: React.FC<Props> = ({hasSearch = true, hasCart = true, className }) => {
     return (
         <header className ={cn('border border-b', className)}>
             <div>
@@ -27,9 +29,9 @@ export const Header: React.FC<Props> = ({ className }) => {
                         </div>
                     </Link>
 
-                    <div className='mx-10 flex-1'>
+                    {hasSearch && <div className='mx-10 flex-1'>
                         <SearchInput></SearchInput>
-                    </div>
+                    </div>}
 
                     <div className='flex items-center gap-3'>
                         <Button variant="outline" className="flext items-center gap-1">
@@ -37,7 +39,7 @@ export const Header: React.FC<Props> = ({ className }) => {
                             Log in
                         </Button>
 
-                        <CartButton></CartButton>
+                        {hasCart && <CartButton></CartButton>}
                     </div> 
 
                 </Container>

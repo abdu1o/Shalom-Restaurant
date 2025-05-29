@@ -1,24 +1,19 @@
 export const revalidate = 60;
 
 import { Container, Title, TopBar, Filters, ProductsGroupList } from "@/components/custom"
-import { prisma } from "@/prisma/prisma-client";
+import { findProducts, GetSearchParams } from "@/lib/find-products";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }){
 
-  const categories = await prisma.category.findMany({ 
-    
-    include: { 
-      products: {
-        include: {
-          items: true,
-          ingredients: true,
-        }
-      } 
-    },
-    orderBy: {
-    id: 'asc',
-  }
-  });
+  const normalizedParams: GetSearchParams = {
+    query: typeof searchParams.query === 'string' ? searchParams.query : undefined,
+    sortBy: typeof searchParams.sortBy === 'string' ? searchParams.sortBy : undefined,
+    ingredients: typeof searchParams.ingredients === 'string' ? searchParams.ingredients : undefined,
+    priceFrom: typeof searchParams.priceFrom === 'string' ? searchParams.priceFrom : undefined,
+    priceTo: typeof searchParams.priceTo === 'string' ? searchParams.priceTo : undefined,
+  };
+
+  const categories = await findProducts(normalizedParams);
 
   return <>
 
