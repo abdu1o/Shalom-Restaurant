@@ -23,7 +23,7 @@ export default async function Home() {
   return <>
 
     <Container className="mt-5 mb-5" >
-      <Title text="From Shabbat to Shakshuka — welcome home" size='lg' className="font-extrabold"/>
+      <Title text="From Shabbat to Shakshuka — welcome home" size='lg' className="font-extrabold text-center"/>
     </Container>
 
     <TopBar categories={categories.filter((category) => category.products.length > 0)}/>

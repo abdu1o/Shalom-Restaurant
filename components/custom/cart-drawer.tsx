@@ -1,25 +1,14 @@
 'use client'
 
 import {cn} from '@/lib/utils'
-import { Container } from './container';
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { SearchInput } from './search-input';
-import { CartButton } from '.';
 
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui';
 import { CartDrawerItem } from './cart-drawer-item';
+import { useCart } from '@/hooks/useCart';
 
 
 interface Props {
@@ -27,6 +16,16 @@ interface Props {
 }
 
 export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children, className }) => {
+    
+    const { totalAmount, updateItemQuantity, items, removeCartItem } = useCart();
+    const [redirecting, setRedirecting] = React.useState(false);
+
+
+    const onUpdateQuantityButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
+        const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
+        updateItemQuantity(id, newQuantity);
+    }
+
     return (
         <Sheet>
             <SheetTrigger>
@@ -35,26 +34,37 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
             <SheetContent className='flex flex-col justify-between pb-0 bg-white'>
                 <SheetHeader>
                     <SheetTitle>
-                        <span className='font-bold'> 3 items</span>
+                        <span className='font-bold'> {items.length} items</span>
                     </SheetTitle>
                 </SheetHeader>
 
-                <CartDrawerItem 
-                    id={1} 
-                    imageUrl={'https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FRecipes%2F2021-03-how-to-matzo-ball-soup%2F2021_howto_matzoballsoup_lead2_228'} 
-                    name={'Qweqweqwe'} 
-                    details={'asdasdasd'} 
-                    price={100} 
-                    quantity={1}>
-                </CartDrawerItem>
-
-                <SheetFooter className='mx-6 bg-white p-8'>
+                <div className='scrollbar-hide overflow-y-scroll'>
+                    {
+                        items.map((item) => (
+                            <div className='mb-2'>
+                                <CartDrawerItem 
+                                    key={item.id}
+                                    id={item.id} 
+                                    imageUrl={item.imageUrl} 
+                                    name={item.size ? `${item.name} - ${item.size}ml` : item.name}
+                                    details={item.description} 
+                                    price={item.price} 
+                                    quantity={item.quantity}
+                                    onUpdateQuantityButton={(type) => onUpdateQuantityButton(item.id, item.quantity, type)}
+                                    onClickRemove={() => removeCartItem(item.id)}>
+                                </CartDrawerItem>
+                            </div>
+                        ))
+                    }
+                </div>
+                
+                <SheetFooter className='mx-6 bg-white p-8 border-t-2 border-primary'>
                     <div className='w-full'>
                         <div className='flex mb-4'>
-                            <span className='flex flex-1 text-lg text-gray-500'>
-                                Total
+                            <span className='flex flex-1 text-lg text-gray-600'>
+                                Total:
                             </span>
-                            <span className='font-bold text-lg'>$100</span>
+                            <span className='font-bold text-lg'>${totalAmount}</span>
                         </div>
 
                         <Link href='/cart'>
