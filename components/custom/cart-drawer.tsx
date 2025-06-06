@@ -20,7 +20,6 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
     const { totalAmount, updateItemQuantity, items, removeCartItem } = useCart();
     const [redirecting, setRedirecting] = React.useState(false);
 
-
     const onUpdateQuantityButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
         const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
         updateItemQuantity(id, newQuantity);
@@ -88,8 +87,10 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
                                 <span className='font-bold text-lg'>${totalAmount}</span>
                             </div>
 
-                            <Link href='/cart'>
+                            <Link href='/checkout'>
                                 <Button
+                                    onClick={() => setRedirecting(true)}
+                                    loading = {redirecting}
                                     type="submit"
                                     className='w-full h-12 text-base'>
                                         Confirm

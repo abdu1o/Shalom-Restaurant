@@ -1,3 +1,5 @@
+'use client';
+
 import {cn} from '@/lib/utils'
 import React from 'react';
 import { CountButton, DetailsImage, ItemInfo } from './cart-item-details';
