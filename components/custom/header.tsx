@@ -1,3 +1,5 @@
+'use client'
+
 import {cn} from '@/lib/utils'
 import { Container } from './container';
 import React from 'react';
@@ -12,6 +14,10 @@ interface Props {
     hasSearch?: boolean;
     hasCart?: boolean;
     className?: string;
+}
+
+const handleClick = () => {
+    console.log('click');
 }
 
 export const Header: React.FC<Props> = ({hasSearch = true, hasCart = true, className }) => {
@@ -34,7 +40,7 @@ export const Header: React.FC<Props> = ({hasSearch = true, hasCart = true, class
                     </div>}
 
                     <div className='flex items-center gap-3'>
-                        <Button variant="outline" className="flext items-center gap-1">
+                        <Button variant="outline" onClick={handleClick} className="flext items-center gap-1">
                             <User size={18}/>
                             Log in
                         </Button>

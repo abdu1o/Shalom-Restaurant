@@ -10,12 +10,15 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { autocomplete } from '@/lib/google';
+import { autocomplete } from '@/app/actions';
 import { PlaceAutocompleteResult } from '@googlemaps/google-maps-services-js';
+import { useFormContext } from 'react-hook-form';
 
 interface AddressInputProps {
-  value: string;
-  onChange: (value: string) => void;
+  className?: string;
+  name: string;
+  label?: string;
+  required?: boolean;
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -30,11 +33,21 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export const FormAddressInput: React.FC<AddressInputProps> = ({
-  value,
-  onChange,
+  className,
+  name,
+  label,
+  required,
 }) => {
-  const [predictions, setPredictions] = useState<PlaceAutocompleteResult[]>([]);
+  const {
+    formState: { errors },
+    watch,
+    setValue,
+  } = useFormContext();
+
+  const value = watch(name) || '';
   const debouncedInput = useDebounce(value, 500);
+  const [predictions, setPredictions] = useState<PlaceAutocompleteResult[]>([]);
+  const errorText = errors[name]?.message as string;
 
   useEffect(() => {
     if (!debouncedInput) {
@@ -51,30 +64,41 @@ export const FormAddressInput: React.FC<AddressInputProps> = ({
   }, [debouncedInput]);
 
   return (
-    <Command>
-      <CommandInput
-        placeholder="Enter your address..."
-        value={value}
-        onValueChange={onChange}
-      />
-      <CommandList>
-        <CommandEmpty>Nothing to suggest...</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          {predictions.map((prediction) => (
-            <CommandItem
-              key={prediction.place_id}
-              onSelect={() => {
-                onChange(prediction.description);
-                setPredictions([]);
-              }}
-              className="cursor-pointer"
-            >
-              {prediction.description}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandSeparator />
-      </CommandList>
-    </Command>
+    <div className={className}>
+      {label && (
+        <p className="font-medium mb-2">
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </p>
+      )}
+
+      <Command>
+        <CommandInput
+          placeholder="Enter your address..."
+          value={value}
+          onValueChange={(val) => setValue(name, val, { shouldValidate: true })}
+        />
+        <CommandList>
+          <CommandEmpty>Nothing to suggest...</CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            {predictions.map((prediction) => (
+              <CommandItem
+                key={prediction.place_id}
+                onSelect={() => {
+                  setValue(name, prediction.description, { shouldValidate: true });
+                  setPredictions([]);
+                }}
+                className="cursor-pointer"
+              >
+                {prediction.description}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandSeparator />
+        </CommandList>
+      </Command>
+
+      {errorText && <p className="text-red-500 text-sm mt-2">{errorText}</p>}
+    </div>
   );
 };

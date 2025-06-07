@@ -10,6 +10,10 @@ import { CheckoutCart } from '@/components/custom/checkout/checkout-cart';
 import { CheckoutInfo } from '@/components/custom/checkout/checkout-info';
 import { CheckoutAddress } from '@/components/custom/checkout/checkout-address';
 import { checkoutFormSchema, CheckoutFormValues } from '@/components/custom/checkout/schemas/checkout-form-schema';
+import { createOrder } from '@/app/actions';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/ui';
+import { ArrowRight } from 'lucide-react';
 
 export default function CheckoutPage() {
     const {totalAmount, items, updateItemQuantity, removeCartItem, loading} = useCart();
@@ -31,8 +35,28 @@ export default function CheckoutPage() {
         updateItemQuantity(id, newQuantity);
     }
 
-    const onSubmit = (data: CheckoutFormValues) => {
+    const onClickSubmitButton = () => {
+        onSubmit(form.getValues());
+    }
 
+    const onSubmit = async (data: CheckoutFormValues) => {
+        console.log("Submitting with data:", data);
+        createOrder(data);
+
+
+        //временно забудь про это 
+        // try {
+        //     const url = await createOrder(data);
+
+        //     toast.success('Order created successfully!');
+
+        //     if(url) {
+        //         location.href = url;
+        //     }
+
+        // } catch (error) {
+        //     toast.error('Error creating an order');
+        // }
     };
 
     return (
@@ -40,7 +64,7 @@ export default function CheckoutPage() {
             <Title text='Checkout' className='font-extrabold mb-8 text-[36px]'></Title>
 
             <FormProvider {...form}>
-                <form onSubmit={form.handleSubmit((onSubmit))}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex gap-10">
                         <div className="flex flex-col gap-10 flex-1 mb-20">
                             
@@ -54,8 +78,9 @@ export default function CheckoutPage() {
 
                         <div className="w-[450px]">
                             <CheckoutTotalCard totalAmount={totalAmount} loading={loading}></CheckoutTotalCard>
+                            
                         </div>
-
+                        
                     </div>
                 </form>
             </FormProvider>

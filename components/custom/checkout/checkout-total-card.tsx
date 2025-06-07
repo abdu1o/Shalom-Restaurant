@@ -60,8 +60,7 @@ export const CheckoutTotalCard: React.FC<Props> = ({ totalAmount, loading, class
                 value={loading ? <Skeleton className="h-6 w-16 rounded-[6px]" /> : `$${tipAmount}`}
                 />
             </div>
-
-            <Button type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
+            <Button loading={loading} type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold sticky">
                 Proceed to payment
                 <ArrowRight className="w-5 ml-2" />
             </Button>
