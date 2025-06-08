@@ -13,9 +13,8 @@ interface Props {
 export const TopBar: React.FC<Props> = ({ categories, className }) => {
     return (
         <div className={cn('sticky top-0 bg-blue-200 py-3 shadow-lg border-t-2 border-b-2 border-primary shadow-black/5 z-10', className)}>
-            <Container className='flex items-center justify-between'>
+            <Container className='flex items-center justify-center'>
                 <Categories items={categories}></Categories>
-                <SortPopup></SortPopup>
             </Container>
         </div>
     );
