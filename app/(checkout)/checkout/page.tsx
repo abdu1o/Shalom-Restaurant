@@ -17,6 +17,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function CheckoutPage() {
     const {totalAmount, items, updateItemQuantity, removeCartItem, loading} = useCart();
+    const [submitting, setSubmitting] = React.useState(false);
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutFormSchema),
@@ -35,28 +36,22 @@ export default function CheckoutPage() {
         updateItemQuantity(id, newQuantity);
     }
 
-    const onClickSubmitButton = () => {
-        onSubmit(form.getValues());
-    }
-
     const onSubmit = async (data: CheckoutFormValues) => {
-        console.log("Submitting with data:", data);
-        createOrder(data);
 
+        try {
+            setSubmitting(true);
+            const url = await createOrder(data);
 
-        //временно забудь про это 
-        // try {
-        //     const url = await createOrder(data);
+            toast.success('Order created successfully!');
 
-        //     toast.success('Order created successfully!');
+            if(url) {
+                location.href = url;
+            }
 
-        //     if(url) {
-        //         location.href = url;
-        //     }
-
-        // } catch (error) {
-        //     toast.error('Error creating an order');
-        // }
+        } catch (error) {
+            setSubmitting(false);
+            toast.error('Error creating an order');
+        }
     };
 
     return (
@@ -77,7 +72,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="w-[450px]">
-                            <CheckoutTotalCard totalAmount={totalAmount} loading={loading}></CheckoutTotalCard>
+                            <CheckoutTotalCard totalAmount={totalAmount} loading={loading || submitting}></CheckoutTotalCard>
                             
                         </div>
                         

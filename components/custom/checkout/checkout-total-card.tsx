@@ -15,8 +15,9 @@ interface Props {
 }
 
 export const CheckoutTotalCard: React.FC<Props> = ({ totalAmount, loading, className }) => {
+    const deliveryPrice = totalAmount === 0 ? 0 : DELIVERY_PRICE;
     const tipAmount = (totalAmount * TIP_PERCENTAGE) / 100;
-    const totalPrice = totalAmount + DELIVERY_PRICE + tipAmount;
+    const totalPrice = totalAmount + deliveryPrice + tipAmount;
 
     return (
         <CartBlock className="p-6 sticky top-4 border border-blue-400 rounded-lg">
@@ -47,7 +48,7 @@ export const CheckoutTotalCard: React.FC<Props> = ({ totalAmount, loading, class
                     Shipping:
                     </div>
                 }
-                value={loading ? <Skeleton className="h-6 w-16 rounded-[6px]" /> : `$${DELIVERY_PRICE}`}
+                value={loading ? <Skeleton className="h-6 w-16 rounded-[6px]" /> : `$${deliveryPrice}`}
                 />
 
                 <CheckoutItemDetails
@@ -60,7 +61,7 @@ export const CheckoutTotalCard: React.FC<Props> = ({ totalAmount, loading, class
                 value={loading ? <Skeleton className="h-6 w-16 rounded-[6px]" /> : `$${tipAmount}`}
                 />
             </div>
-            <Button loading={loading} type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold sticky">
+            <Button loading={loading} disabled={totalAmount === 0} type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold sticky">
                 Proceed to payment
                 <ArrowRight className="w-5 ml-2" />
             </Button>
