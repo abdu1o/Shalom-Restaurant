@@ -23,3 +23,4 @@ export { CountIconButton } from './count-icon-button';
 export { ProductForm } from './product-form';
 export { ErrorText } from './error-text';
 export { ClearButton } from './clear-button';
+export { ProfileButton } from './profile-button';

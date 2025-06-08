@@ -7,6 +7,7 @@ interface Props {
 }
 
 export const CheckoutInfo: React.FC<Props> = ({ className }) => {
+    
     return (
         <CartBlock title="2. Personal info" className={className}>
             <div className="grid grid-cols-2 gap-5">

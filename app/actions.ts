@@ -3,12 +3,12 @@
 import { Client } from '@googlemaps/google-maps-services-js';
 import { CheckoutFormValues } from "@/components/custom/checkout/schemas/checkout-form-schema";
 import { prisma } from "@/prisma/prisma-client";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, Prisma } from "@prisma/client";
 import { cookies } from 'next/headers';
 import { PayOrderTemplate } from '@/components/custom/email-templates/pay-order-template';
 import { sendEmail } from '@/lib/send-email';
-import ReactDOMServer from 'react-dom/server';
-import React from 'react';
+import { hashSync } from 'bcrypt';
+import { getUserSession } from '@/lib/get-user-session';
 
 export async function createOrder(data: CheckoutFormValues) {
     try {
@@ -94,6 +94,63 @@ export async function createOrder(data: CheckoutFormValues) {
     }
 }
 
+export async function registerUser(body: Prisma.UserCreateInput) {
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: body.email,
+      },
+    });
+
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    const createdUser = await prisma.user.create({
+      data: {
+        fullName: body.fullName,
+        email: body.email,
+        password: body.password,
+        verified: String(new Date().toISOString()),
+      },
+    });
+
+    return createdUser;
+  } catch (err) {
+    console.log('Error [CREATE_USER]', err);
+    throw err;
+  }
+}
+
+export async function updateUserInfo(body: Prisma.UserUpdateInput) {
+    try {
+        const currentUser = await getUserSession();
+
+        if (!currentUser) {
+            throw new Error('User not found');
+        }
+
+        const findUser = await prisma.user.findFirst({
+            where: {
+                id: Number(currentUser.id),
+            },
+        });
+
+        await prisma.user.update({
+            where: {
+                id: Number(currentUser.id),
+            },
+            data: {
+                fullName: body.fullName,
+                email: body.email,
+                password: body.password ? hashSync(body.password as string, 10) : findUser?.password,
+            },
+        });
+    } catch (err) {
+        console.log('Error [UPDATE_USER]', err);
+        throw err;
+    }
+}
 
 // google autocomplete
 const client = new Client();

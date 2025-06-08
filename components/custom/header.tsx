@@ -6,9 +6,12 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SearchInput } from './search-input';
-import { CartButton } from '.';
+import { CartButton, ProfileButton } from '.';
 import { Button } from '../ui';
 import { User } from 'lucide-react';
+import { useSession, signIn } from 'next-auth/react';
+import { useSearchParam } from 'react-use';
+import { Auth } from './modals/auth';
 
 interface Props {
     hasSearch?: boolean;
@@ -16,11 +19,12 @@ interface Props {
     className?: string;
 }
 
-const handleClick = () => {
-    console.log('click');
-}
-
 export const Header: React.FC<Props> = ({hasSearch = true, hasCart = true, className }) => {
+
+    const [openAuth, setOpenAuth] = React.useState(false);
+
+    // const searchParams = useSearchParam();
+
     return (
         <header className ={cn('border border-b', className)}>
             <div>
@@ -40,10 +44,9 @@ export const Header: React.FC<Props> = ({hasSearch = true, hasCart = true, class
                     </div>}
 
                     <div className='flex items-center gap-3'>
-                        <Button variant="outline" onClick={handleClick} className="flext items-center gap-1">
-                            <User size={18}/>
-                            Log in
-                        </Button>
+                        <Auth open={openAuth} onClose={() => setOpenAuth(false)} ></Auth>
+
+                        <ProfileButton onClickSignIn={() => setOpenAuth(true)}></ProfileButton>
 
                         {hasCart && <CartButton></CartButton>}
                     </div> 

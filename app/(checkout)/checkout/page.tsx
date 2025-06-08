@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from "react-hook-form"
 import { Container, Title } from "@/components/custom";
 import { useCart } from "@/hooks/useCart";
-import React from "react";
 import { CheckoutTotalCard } from "@/components/custom/checkout/checkout-total-card";
 import { CheckoutCart } from '@/components/custom/checkout/checkout-cart';
 import { CheckoutInfo } from '@/components/custom/checkout/checkout-info';
@@ -12,24 +11,41 @@ import { CheckoutAddress } from '@/components/custom/checkout/checkout-address';
 import { checkoutFormSchema, CheckoutFormValues } from '@/components/custom/checkout/schemas/checkout-form-schema';
 import { createOrder } from '@/app/actions';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/ui';
-import { ArrowRight } from 'lucide-react';
+import React from 'react';
+import { useSession } from 'next-auth/react';
+import { Api } from '@/services/api-client';
 
 export default function CheckoutPage() {
     const {totalAmount, items, updateItemQuantity, removeCartItem, loading} = useCart();
     const [submitting, setSubmitting] = React.useState(false);
+    const {data: session } = useSession();
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutFormSchema),
         defaultValues: {
             email: '',
-            firstName: '',
+            firstName: session?.user.name || '',
             lastName: '',
             phone: '',
             address: '',
             comment: '',
         },
     });
+
+    React.useEffect(() => {
+        async function fetchUserInfo() {
+            const data = await Api.auth.getMe();
+            const [firstName, lastName] = data.fullName.split(' ');
+
+            form.setValue('firstName', firstName);
+            form.setValue('lastName', lastName);
+            form.setValue('email', data.email);
+        }
+
+        if (session) {
+            fetchUserInfo();
+        }
+    }, [session]);
 
     const onUpdateQuantityButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
         const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
